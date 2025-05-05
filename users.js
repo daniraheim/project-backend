@@ -4,6 +4,7 @@ const userModel = require('./userModel.js');
 
 router.get('/login', async (request, response) => {
     const [rows] = await userModel.getAllUsers();
+     console.log(rows)
     response.json(rows);
 })
 
