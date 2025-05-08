@@ -1,12 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const userModel = require('./userModel.js');
+const db = require('./dbUtil.js');
 
-router.get('/login', async (request, response) => {
-    const [rows] = await userModel.getAllUsers();
-     console.log(rows)
-    response.json(rows);
-})
+
+router.post('/login', (req, res) => {
+    console.log(req.body)
+    const { username, password } = req.body;
+
+  console.log('a')
+    const query = 'SELECT * FROM users WHERE username = ? and password = ?';
+  
+    db.query(query, [username, password], (error, results) => {
+      console.log(error)
+      if (error) {
+        console.error('Database query error:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+      if (results.length === 0) {
+        return res.status(400).json({ success: false, message: 'User not found' });
+      }
+      const user = results[0];
+  
+      const passwordsMatch = user.password === password;
+  
+      if (!passwordsMatch) {
+        return res.status(400).json({ success: false, message: 'Incorrect password' });
+      }
+      return res.status(200).json({ success: true, message: 'Login successful', user: { username: user.username } });
+    });
+  });
 
 router.post('/register', async (request, response) => {
 
