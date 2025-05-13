@@ -15,17 +15,6 @@ router.post('/login', async (req, res) => {
     const query = 'SELECT * FROM users WHERE username = ? and password = ?';
     const result = await userModel.getAllUsers(username, password);
     console.log(result[0]);
-    // db.query(query, [username, password], (error, results) => {
-    //   console.log(error)
-    //   if (error) {
-    //     console.error('Database query error:', error);
-    //     return res.status(500).json({ success: false, message: 'Server error' });
-    //   }
-    //   if (results.length === 0) {
-    //     return res.status(400).json({ success: false, message: 'User not found' });
-    //   }
- 
-      // const passwordsMatch = user.password === password;
  
       if (result[0].length == 0) {
         return res.status(400).json({ success: false, message: 'User not found' });
@@ -36,7 +25,6 @@ router.post('/login', async (req, res) => {
       const user = result[0];
         return res.status(200).json({ success: true, message: 'Login successful', user: { username: user.username } });
       }
-    //});
   });
 
 router.post('/register', async (request, response) => {
